@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 // Funciona bem!
+// https://www.jdoodle.com/online-java-compiler/
 public class LetterBinaryJava {
     public static void main(String[] args) {
         TreeMap<Character, String> binaryReps = new TreeMap<Character, String>();
