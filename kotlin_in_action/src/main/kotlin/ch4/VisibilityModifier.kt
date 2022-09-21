@@ -12,3 +12,19 @@ fun TalkativeButton.giveSpeech() {
     yell()
     whisper() // Só será visivel para a própria classe e para as subclasses, mais simples que Java
 }*/
+
+class LengthCounter {
+    var counter: Int = 0
+        private set
+    fun addWord(word: String) {
+        counter += word.length
+    }
+}
+
+fun main() {
+    val lengthCounter = LengthCounter()
+    lengthCounter.addWord("Hello ")
+    println(lengthCounter.counter)
+    lengthCounter.addWord("World!")
+    println(lengthCounter.counter)
+}
