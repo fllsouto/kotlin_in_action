@@ -25,8 +25,12 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("com.jayway.jsonpath:json-path")
 	runtimeOnly("com.h2database:h2")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+//	testImplementation("org.apache.groovy:groovy-xml:4.0.5")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("io.rest-assured:spring-mock-mvc:5.2.0")
+	testImplementation("io.rest-assured:kotlin-extensions:5.2.0")
+	testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:3.1.4")
 }
 
 tasks.withType<KotlinCompile> {

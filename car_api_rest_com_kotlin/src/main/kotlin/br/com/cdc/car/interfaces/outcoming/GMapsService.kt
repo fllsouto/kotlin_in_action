@@ -10,9 +10,11 @@ import org.springframework.web.client.RestTemplate
 class GMapsService(
     // Trocar o perfil de execução da app para dev
     @Value("\${app.car.domain.googlemaps.apikey}")
-    val appKey: String
+    val appKey: String,
+    @Value("\${interfaces.outcoming.gmaps.host}")
+    val gmapsHost: String
 ) {
-    val GMAPS_TEMPLATE: String = "https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={destination}&key={key}"
+    val GMAPS_TEMPLATE: String = "$gmapsHost/maps/api/directions/json?origin={origin}&destination={destination}&key={key}"
     val DISTANCE_JSON_PATH_EXPRESSION = "\$..legs[*].duration.value"
     // No jsonpath o $.. é utilizado para fazer uma busca em toda a árvore, enquanto que $. procura apenas no primeiro
     // nível
