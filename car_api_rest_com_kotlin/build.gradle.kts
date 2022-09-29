@@ -19,6 +19,7 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.hateoas:spring-hateoas")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -26,7 +27,6 @@ dependencies {
 	implementation("com.jayway.jsonpath:json-path")
 	runtimeOnly("com.h2database:h2")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-//	testImplementation("org.apache.groovy:groovy-xml:4.0.5")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.rest-assured:spring-mock-mvc:5.2.0")
 	testImplementation("io.rest-assured:kotlin-extensions:5.2.0")
