@@ -31,6 +31,9 @@ class TravelRequestAPITestIT {
     @BeforeEach
     fun setup() {
         RestAssured.port = port
+    }
+
+    fun setupServer() {
         val origin = "Avenida Paulista, 900"
         val destination = "Avenida Paulista, 1000"
         val apiKey = "API-KEY"
@@ -47,19 +50,49 @@ class TravelRequestAPITestIT {
     }
 
     @Test
-    fun testCreatePassenger() {
-        val createPassengerJSON = """
-            {"name" : "John Doe"}
-        """.trimIndent()
+    fun testFindNearbyTravelRequest() {
+        setupServer()
 
-        given()
+        val passengerId = given()
             .contentType(JSON)
-            . body(createPassengerJSON)
+            .body(loadFileContent("/requests/passengers_api/create_new_passenger.json"))
             .post("/passengers")
             .then()
             .statusCode(200)
             .body("id", notNullValue())
             .body("name", equalTo("John Doe"))
+            .extract()
+            .body()
+            .jsonPath().getString("id")
+
+        val data = mapOf<String, String>("passengerId" to passengerId)
+
+        val travelRequestId = given()
+            .contentType(JSON)
+            .body(loadFileContent("/requests/travel_requests_api/create_new_request.json", data))
+            .post("/travelRequests")
+            .then()
+            .statusCode(200)
+            .body("id", notNullValue())
+            .body("origin", equalTo("Avenida Paulista, 1000"))
+            .body("destination", equalTo("Avenida Ipiranga, 100"))
+            .body("status", equalTo("CREATED"))
+            .body("_links.passenger.title", equalTo("John Doe"))
+            .extract()
+            .body()
+            .jsonPath().getInt("id")
+
+        given()
+            .get("/travelRequests/nearby?currentAddress=Avenida Paulista, 900")
+            .then()
+            .statusCode(200)
+            .body("[0].id", equalTo(travelRequestId))
+            .body("[0].origin", equalTo("Avenida Paulista, 1000"))
+            .body("[0].destination", equalTo("Avenida Ipiranga, 100"))
+            .body("[0].status", equalTo("CREATED"))
     }
+
+
+
 
 }
