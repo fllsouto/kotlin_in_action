@@ -2,10 +2,7 @@ package br.com.cdc.car.domain
 
 import java.time.LocalDate
 import java.time.LocalDateTime
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.ManyToOne
+import javax.persistence.*
 
 @Entity
 data class Driver(
@@ -41,3 +38,19 @@ data class TravelRequest(
 enum class TravelRequestStatus {
     CREATED, ACCEPTED, REFUSED
 }
+
+@Entity
+data class DomainUser(
+    @Id
+    @GeneratedValue
+    var id: Long? = null,
+
+    @Column(unique = true)
+    val username: String,
+    val password: String,
+    val enabled: Boolean = true,
+
+    @ElementCollection
+    val roles: MutableList<String>
+
+)
