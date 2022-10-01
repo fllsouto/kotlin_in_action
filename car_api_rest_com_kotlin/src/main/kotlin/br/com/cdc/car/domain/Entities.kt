@@ -44,18 +44,18 @@ enum class TravelRequestStatus {
     CREATED, ACCEPTED, REFUSED
 }
 
-//@Entity(name = "`user`")
-//data class User(
-//    @Id
-//    @GeneratedValue
-//    var id: Long? = null,
-//
-//    @Column(unique = true)
-//    val username: String,
-//    val password: String,
-//    val enabled: Boolean = true,
-//
-//    @ElementCollection
-//    val roles: MutableList<String>
-//
-//)
+@Entity(name = "`user`")
+data class User(
+    @Id
+    @GeneratedValue
+    var id: Long? = null,
+
+    @Column(unique = true)
+    val username: String,
+    val password: String,
+    val enabled: Boolean = true,
+
+    @ElementCollection
+    val roles: MutableList<String>
+
+)
