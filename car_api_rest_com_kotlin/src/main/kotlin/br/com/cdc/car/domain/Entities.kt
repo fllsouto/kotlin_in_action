@@ -44,8 +44,8 @@ enum class TravelRequestStatus {
     CREATED, ACCEPTED, REFUSED
 }
 
-@Entity(name = "`user`")
-data class User(
+@Entity
+data class DomainUser(
     @Id
     @GeneratedValue
     var id: Long? = null,

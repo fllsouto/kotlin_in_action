@@ -8,4 +8,4 @@ interface TravelRequestRepository : JpaRepository<TravelRequest, Long> {
     fun findByStatus(status: TravelRequestStatus): List<TravelRequest>
 }
 
-interface UserRepository: JpaRepository<User, Long>
+interface UserRepository: JpaRepository<DomainUser, Long>

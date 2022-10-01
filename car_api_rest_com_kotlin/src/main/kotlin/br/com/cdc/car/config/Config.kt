@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import javax.annotation.PostConstruct
 import javax.sql.DataSource
 import br.com.cdc.car.domain.UserRepository
-import br.com.cdc.car.domain.User as DomainUser
+import br.com.cdc.car.domain.DomainUser
 
 @Configuration
 @EnableWebSecurity
@@ -71,8 +71,16 @@ class SecurityConfig(val dataSource: DataSource): WebSecurityConfigurerAdapter()
 
 
 
-        val queryUsers = "select username, password, enabled from `user` where username=?"
-        val queryRoles = "select u.username, r.roles from user_roles r, `user` u where r.user_id = u.id and u.username=?"
+        val queryUsers = """
+            select du.username, du.password, du.enabled 
+            from domain_user du 
+            where du.username=?
+            """.trimIndent()
+        val queryRoles = """
+            select du.username, dur.roles 
+            from domain_user_roles dur, domain_user du
+            where dur.domain_user_id = du.id and du.username=?
+        """.trimIndent()
 
         auth.jdbcAuthentication()
             .dataSource(dataSource)
