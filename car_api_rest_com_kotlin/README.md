@@ -8,3 +8,6 @@
 - https://console.cloud.google.com/google/maps-apis/overview?project=car-api-rest-kotlin
 - https://github.com/alesaudate/rest-kotlin
 - https://www.base64encode.org/
+- http://www.h2database.com/html/advanced.html#keywords
+- https://www.baeldung.com/spring-boot-h2-database
+- https://stackoverflow.com/questions/26220083/h2-database-console-spring-boot-load-denied-by-x-frame-options
