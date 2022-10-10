@@ -1,6 +1,7 @@
 package br.com.cdc.car.interfaces.incoming
 
 import io.restassured.RestAssured
+import io.restassured.RestAssured.basic
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType.JSON
 import org.hamcrest.Matchers.equalTo
@@ -17,7 +18,9 @@ class PassengerAPITestIT {
 
     @BeforeEach
     fun setup() {
-        RestAssured.port = port
+        RestAssured.baseURI = "https://localhost:$port"
+        RestAssured.useRelaxedHTTPSValidation()
+        RestAssured.authentication = basic("admin", "password")
     }
 
     @Test
