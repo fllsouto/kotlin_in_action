@@ -7,6 +7,9 @@ import org.springframework.hateoas.EntityModel
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
+import javax.validation.Valid
+import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
 
 @RestController
 @RequestMapping(path = ["/travelRequests"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -17,7 +20,7 @@ class TravelRequestAPI(
 
 
     @PostMapping
-    fun makeTravelRequest(@RequestBody travelRequestInput: TravelRequestInput): EntityModel<TravelRequestOutput> {
+    fun makeTravelRequest(@RequestBody @Valid travelRequestInput: TravelRequestInput): EntityModel<TravelRequestOutput> {
         val travelRequest = travelService.saveTravelRequest(mapper.map(travelRequestInput))
         val output = mapper.map(travelRequest)
         return mapper.buildOutputModel(travelRequest, output)
@@ -31,9 +34,12 @@ class TravelRequestAPI(
 }
 
 data class TravelRequestInput(
-    val passengerId: Long,
-    val origin: String,
-    val destination: String
+    @get:NotNull(message = "O campo passengerId não pode ser nulo")
+    val passengerId: Long?,
+    @get:NotEmpty(message = "O campo origin não pode ser vazio")
+    val origin: String?,
+    @get:NotEmpty(message = "O campo destination não pode ser vazio")
+    val destination: String?
 )
 data class TravelRequestOutput(
     val id: Long,
