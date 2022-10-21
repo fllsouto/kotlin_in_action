@@ -1,5 +1,9 @@
 package br.com.cdc.car.interfaces.incoming.errorhandling
 
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.http.HttpStatus
@@ -27,6 +31,13 @@ class DefaultErrorHandler(
 ) {
     @ExceptionHandler(MethodArgumentNotValidException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "400", content = [Content(
+            mediaType = "application/json",
+            schema = Schema(implementation = ErrorResponse::class)
+        )
+        ])
+    ])
     fun handleArgumentNotValid(ex: MethodArgumentNotValidException): ErrorResponse {
         val messages = ex.bindingResult.fieldErrors.map {
             getMessage(it)

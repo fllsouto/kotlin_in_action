@@ -1,5 +1,6 @@
 package br.com.cdc.car.domain
 
+import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.Column
@@ -8,13 +9,20 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.ManyToOne
+import javax.validation.constraints.Size
 
 @Entity
+@Schema(description = "Representa um motorista dentro da plataforma")
 data class Driver(
     @Id
     @GeneratedValue
     var id: Long? = null,
+
+    @get:Schema(description = "Nome do motorista")
+    @get:Size(min = 5, max = 255)
     val name: String,
+
+    @get:Schema(description = "Data de nascimento do motorista")
     val birthDate: LocalDate
 )
 

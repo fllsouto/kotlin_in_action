@@ -16,6 +16,9 @@ import javax.annotation.PostConstruct
 import javax.sql.DataSource
 import br.com.cdc.car.domain.UserRepository
 import br.com.cdc.car.domain.DomainUser
+import io.swagger.v3.oas.models.info.Info
+import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.info.Contact
 import org.springframework.context.MessageSource
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 
@@ -41,6 +44,7 @@ class SecurityConfig(val dataSource: DataSource): WebSecurityConfigurerAdapter()
             .authorizeRequests()
             .antMatchers(HttpMethod.GET, "/h2-console/**").permitAll()
             .antMatchers(HttpMethod.POST, "/h2-console/**").permitAll()
+            .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
             .anyRequest()
             .authenticated()
             .and()
@@ -117,5 +121,25 @@ class AppConfig {
      return ReloadableResourceBundleMessageSource().apply {
          setBasename("classpath:/i18n/messages")
      }
+    }
+}
+
+@Configuration
+class OpenAPIConfig {
+
+    @Bean
+    fun openAPIDocumentation(): OpenAPI {
+        return OpenAPI()
+            .info(
+                Info()
+                    .title("C.A.R. API")
+                    .description("API do sistema C.A.R., de facilitação de mobilidade urbana")
+                    .version("v1.0")
+                    .contact(
+                        Contact()
+                            .name("Alexandre Saudate")
+                            .email("alesaudate@gmail.com")
+                    )
+            )
     }
 }
