@@ -16,6 +16,8 @@ import javax.annotation.PostConstruct
 import javax.sql.DataSource
 import br.com.cdc.car.domain.UserRepository
 import br.com.cdc.car.domain.DomainUser
+import org.springframework.context.MessageSource
+import org.springframework.context.support.ReloadableResourceBundleMessageSource
 
 @Configuration
 @EnableWebSecurity
@@ -106,4 +108,14 @@ class LoadUserConfig(
         userRepository.save(admin)
     }
 
+}
+
+@Configuration
+class AppConfig {
+    @Bean
+    fun messageSource(): MessageSource? {
+     return ReloadableResourceBundleMessageSource().apply {
+         setBasename("classpath:/i18n/messages")
+     }
+    }
 }
