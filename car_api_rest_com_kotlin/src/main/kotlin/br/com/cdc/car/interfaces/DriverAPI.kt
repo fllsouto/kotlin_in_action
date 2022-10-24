@@ -8,6 +8,10 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.data.domain.PageRequest
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.Link
+import org.springframework.hateoas.server.mvc.linkTo
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
@@ -16,23 +20,32 @@ import java.time.LocalDate
 
 // @Service // Não precisa dessa anotação
 @RestController
-@RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE], path = ["/drivers"])
 class DriverAPIImpl(
     val driverRepository: DriverRepository
 ): DriverAPI {
 
-    @GetMapping("/drivers")
-    override fun listDrivers() : List<Driver> = driverRepository.findAll()
+    @GetMapping
+    override fun listDrivers(page: Int) : Drivers {
+        val driverPage = driverRepository.findAll(PageRequest.of(page, PAGE_SIZE))
+        val drivers = driverPage.content.map { EntityModel.of(it) }
+        val lastPageLink = linkTo<DriverAPIImpl> { listDrivers(driverPage.totalPages - 1) }.withRel("lastPage")
+        return Drivers(drivers, listOf(lastPageLink))
+    }
 
-    @GetMapping("/drivers/{id}")
+    companion object {
+        private const val PAGE_SIZE: Int = 20
+    }
+
+    @GetMapping("/{id}")
     override fun findDriver(@PathVariable("id") id: Long) : Driver = driverRepository.findById(id).orElseThrow {
         ResponseStatusException(HttpStatus.NOT_FOUND)
     }
 
-    @PostMapping("/drivers")
+    @PostMapping
     override fun createDriver(@RequestBody driver: Driver) = driverRepository.save(driver)
 
-    @PutMapping("/drivers/{id}")
+    @PutMapping("/{id}")
     override fun incrementalUpdateDriver(@PathVariable id: Long, @RequestBody driver: PatchDriver): Driver {
         val foundDriver = findDriver(id)
         val copyDriver = foundDriver.copy(
@@ -42,9 +55,14 @@ class DriverAPIImpl(
         return driverRepository.save(copyDriver)
     }
 
-    @DeleteMapping("/drivers/{id}")
+    @DeleteMapping("/{id}")
     override fun deleteDriver(@PathVariable("id") id: Long) = driverRepository.delete(findDriver(id))
 }
+
+open class Drivers(
+    val drivers: List<EntityModel<Driver>>,
+    val links: List<Link> = emptyList()
+)
 
 data class PatchDriver(
     val name: String?,
@@ -55,7 +73,7 @@ data class PatchDriver(
 interface DriverAPI {
 
     @Operation(description = "Lista todos os motoristas disponíveis")
-    fun listDrivers() : List<Driver>
+    fun listDrivers(@RequestParam(name = "page", defaultValue = "0") page: Int) : Drivers
     @Operation(description = "Localiza um motorista específico", responses = [
         ApiResponse(responseCode = "200", description = "Caso o motorista tenha sido encontrado na base"),
         ApiResponse(responseCode = "404", description = "Caso o motorista não tenha sido encontrado",
